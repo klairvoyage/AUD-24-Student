@@ -1,0 +1,46 @@
+[
+  {
+    "RBTree": "[,1,null,]",
+    "valid": false
+  },
+  {
+    "RBTree": "[,1,R,]",
+    "valid": true
+  },
+  {
+    "RBTree": "[,1,B,]",
+    "valid": true
+  },
+  {
+    "RBTree": "[[,1,null,],2,null,[,3,null,]]",
+    "valid": false
+  },
+  {
+    "RBTree": "[[,1,null,],2,R,[,3,null,]]",
+    "valid": false
+  },
+  {
+    "RBTree": "[[,1,null,],2,R,[,3,B,]]",
+    "valid": false
+  },
+  {
+    "RBTree": "[[,1,R,],2,R,[,3,null,]]",
+    "valid": false
+  },
+  {
+    "RBTree": "[[,1,R,],2,B,[,3,R,]]",
+    "valid": true
+  },
+  {
+    "RBTree": "[[[[,1,R,],2,B,[,3,R,]],4,R,[,5,B,]],6,B,[[,7,R,[[,8,R,],9,R,]],10,B,[[[[,11,R,[,12,B,]],13,null,],14,R,],15,B,[,16,B,[,17,R,[,18,R,]]]]]]",
+    "valid": false
+  },
+  {
+    "RBTree": "[[[[,1,R,],2,B,[,3,R,]],4,R,[,5,B,]],6,B,[[,7,R,[[,8,R,],9,R,]],10,B,[[[[,11,R,[,12,B,]],13,R,],14,R,],15,B,[,16,B,[,17,R,[,18,R,]]]]]]",
+    "valid": true
+  },
+  {
+    "RBTree": "[]",
+    "valid": true
+  }
+]

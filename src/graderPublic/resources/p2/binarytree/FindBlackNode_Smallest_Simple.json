@@ -1,0 +1,32 @@
+[
+  {
+    "RBTree": "[,1,B,]",
+    "totalBlackHeight": 1,
+    "targetBlackHeight": 1,
+    "expectedNode": 1
+  },
+  {
+    "RBTree": "[[,1,B,],2,B,[,3,B,]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 2,
+    "expectedNode": 2
+  },
+  {
+    "RBTree": "[[,1,B,],2,B,[,3,B,]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 1,
+    "expectedNode": 1
+  },
+  {
+    "RBTree": "[[[,1,B,],2,B,[,3,B,]],4,B,[[,5,B,],6,B,[,7,B,]]]",
+    "totalBlackHeight": 3,
+    "targetBlackHeight": 2,
+    "expectedNode": 2
+  },
+  {
+    "RBTree": "[[[,1,B,],2,B,[,3,B,]],4,B,[[,5,B,],6,B,[,7,B,]]]",
+    "totalBlackHeight": 3,
+    "targetBlackHeight": 1,
+    "expectedNode": 1
+  }
+]

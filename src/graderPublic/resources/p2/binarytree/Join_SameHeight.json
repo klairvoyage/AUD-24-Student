@@ -1,0 +1,14 @@
+[
+  {
+    "leftRBTree": "[,1,B,]",
+    "rightRBTree": "[,3,B,]",
+    "joinKey": 2,
+    "expectedRBTree": "[[,1,B,],2,B,[,3,B,]]"
+  },
+  {
+    "leftRBTree": "[[,1,B,],2,B,[,3,B,]]",
+    "rightRBTree": "[[,5,B,],6,B,[,7,B,]]",
+    "joinKey": 4,
+    "expectedRBTree": "[[[,1,B,],2,B,[,3,B,]],4,R,[[,5,B,],6,B,[,7,B,]]]"
+  }
+]
