@@ -2,6 +2,7 @@ package p2.binarytree;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
 
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -40,6 +42,8 @@ public class InsertRBTreeTest extends P2_TestBase {
         doNothing().when(tree).insert(insertNodeCaptor.capture(), insertInitialPXCaptor.capture());
         doNothing().when(tree).fixColorsAfterInsertion(fixColorsNodeCaptor.capture());
 
+        InOrder inOrder = inOrder(tree);
+
         Context context = contextBuilder()
             .subject("RBTree#insert(T)")
             .add("value", value)
@@ -49,10 +53,10 @@ public class InsertRBTreeTest extends P2_TestBase {
 
         checkVerify(() -> verify(tree, times(1)).createNode(anyInt()), context,
             "createNode was not called exactly once");
-        checkVerify(() -> verify(tree, times(1)).insert(any(), any()), context,
+        checkVerify(() -> inOrder.verify(tree, times(1)).insert(any(), any()), context,
             "insert(N, N) was not called exactly once");
-        checkVerify(() -> verify(tree, times(1)).fixColorsAfterInsertion(any()), context,
-            "fixColorsAfterInsertion was not called exactly once");
+        checkVerify(() -> inOrder.verify(tree, times(1)).fixColorsAfterInsertion(any()), context,
+            "fixColorsAfterInsertion was not called exactly once or was called before insert(N, N)");
 
         assertSame(value, createNodeCaptor.getValue(), context,
             result -> "createNode was not called with the correct value");
