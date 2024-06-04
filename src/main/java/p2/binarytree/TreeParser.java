@@ -170,7 +170,7 @@ public class TreeParser {
         public void accept(char expected) {
             char next = next();
             if (next != expected) {
-                throw new IllegalArgumentException("Expected: `" + expected + "`, found: `" + next + "`");
+                throw new IllegalArgumentException("Expected: `" + expected + "`, found: `" + next + "` at index " + (index - 1));
             }
         }
 

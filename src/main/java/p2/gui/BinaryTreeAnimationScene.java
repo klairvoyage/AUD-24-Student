@@ -19,6 +19,7 @@ public class BinaryTreeAnimationScene<T extends Comparable<T>> extends Scene {
     private final TreePane treePane = new TreePane();
     private final OperationBox<T> operationBox;
     private final InfoBox infoBox;
+    private final ControlBox<T> controlBox;
 
     private final AnimationState animationState = new AnimationState();
 
@@ -40,7 +41,9 @@ public class BinaryTreeAnimationScene<T extends Comparable<T>> extends Scene {
         root.setPrefSize(700, 700);
 
         root.setCenter(treePane);
-        root.setBottom(new ControlBox<>(primaryStage, this));
+
+        controlBox = new ControlBox<>(primaryStage, this);
+        root.setBottom(controlBox);
 
         infoBox = new InfoBox(animationState);
 
@@ -96,15 +99,24 @@ public class BinaryTreeAnimationScene<T extends Comparable<T>> extends Scene {
         animationState.clear();
         if (this.animation.isAnimating()) {
             root.setRight(infoBox);
+            controlBox.enableNextStepButton();
         }
 
         animationThread = new Thread(() -> {
-            animation.accept(this.animation);
-            Platform.runLater(() -> {
-                root.setRight(operationBox);
-                this.animation.runWithoutAnimation(() -> treePane.setTree(this.animation.getRoot()));
-                operationBox.clearInputs();
-            });
+            try {
+                animation.accept(this.animation);
+                Platform.runLater(() -> {
+                    root.setRight(operationBox);
+                    this.animation.runWithoutAnimation(() -> treePane.setTree(this.animation.getRoot()));
+                    operationBox.clearInputs();
+                });
+            } catch (RuntimeException e) {
+                animationState.setException(e);
+                animationState.setStackTrace(e.getStackTrace());
+                Platform.runLater(infoBox::showException);
+            }
+
+            Platform.runLater(controlBox::disableNextStepButton);
         });
 
         animationThread.start();

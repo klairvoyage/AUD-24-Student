@@ -16,6 +16,8 @@ import javafx.stage.Stage;
  */
 public class ControlBox<T extends Comparable<T>> extends HBox {
 
+    private final Button nextStepButton;
+
     /**
      * Constructs a new control box.
      */
@@ -26,7 +28,7 @@ public class ControlBox<T extends Comparable<T>> extends HBox {
         setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
 
         Button backButton = new Button("Back");
-        Button nextStepButton = new Button("Next Step");
+        nextStepButton = new Button("Next Step");
         Button zoomOutButton = new Button("Zoom Out");
         Button zoomInButton = new Button("Zoom In");
         Button centerButton = new Button("Center Tree");
@@ -52,6 +54,7 @@ public class ControlBox<T extends Comparable<T>> extends HBox {
             primaryStage.setScene(new LoadTreeScene(primaryStage));
         });
 
+        nextStepButton.setDisable(true);
         nextStepButton.setOnAction(event -> {
             synchronized (animationScene.getAnimation()) {
                 animationScene.getAnimation().notify();
@@ -63,6 +66,14 @@ public class ControlBox<T extends Comparable<T>> extends HBox {
         zoomOutButton.setOnAction(event -> animationScene.getTreePane().zoomOut());
 
         printTreeButton.setOnAction(event -> System.out.println("Current Tree: " + animationScene.getAnimation().toString()));
+    }
+
+    public void enableNextStepButton() {
+        nextStepButton.setDisable(false);
+    }
+
+    public void disableNextStepButton() {
+        nextStepButton.setDisable(true);
     }
 
 }

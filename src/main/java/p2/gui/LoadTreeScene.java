@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import p2.binarytree.TreeParser;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -44,28 +45,12 @@ public class LoadTreeScene extends Scene {
         HBox buttonBox = new HBox(loadRBTreeButton, loadBSTButton);
         buttonBox.setSpacing(5);
 
-        loadRBTreeButton.setOnAction(event -> {
-            if (textField.getText().isEmpty()) {
-                loadScene(primaryStage, new RBTreeAnimation<Integer>(), Integer::parseInt);
-            } else if (textField.getText().chars().anyMatch(Character::isDigit)) {
-                Function<String, Integer> inputParser = Integer::parseInt;
-                loadScene(primaryStage, TreeParser.parseRBTree(textField.getText(), inputParser, new RBTreeAnimation<>()), inputParser);
-            } else {
-                Function<String, String> inputParser = Function.identity();
-                loadScene(primaryStage, TreeParser.parseRBTree(textField.getText(), inputParser, new RBTreeAnimation<>()), inputParser);
-            }
-        });
+        loadRBTreeButton.setOnAction(event -> loadScene(primaryStage, loadRBTree(textField.getText())));
+        loadBSTButton.setOnAction(event -> loadScene(primaryStage, loadBST(textField.getText())));
 
-        loadBSTButton.setOnAction(event -> {
-            if (textField.getText().isEmpty()) {
-                loadScene(primaryStage, new SimpleBinarySearchTreeAnimation<Integer>(), Integer::parseInt);
-            } else if (textField.getText().chars().anyMatch(Character::isDigit)) {
-                Function<String, Integer> inputParser = Integer::parseInt;
-                loadScene(primaryStage, TreeParser.parseBST(textField.getText(), inputParser, new SimpleBinarySearchTreeAnimation<>()), inputParser);
-            } else {
-                Function<String, String> inputParser = Function.identity();
-                loadScene(primaryStage, TreeParser.parseBST(textField.getText(), inputParser, new SimpleBinarySearchTreeAnimation<>()), inputParser);
-            }
+        textField.textProperty().addListener((obs, oldValue, newValue) -> {
+            loadBSTButton.setDisable(!checkInputValid(this::loadBST, newValue));
+            loadRBTreeButton.setDisable(!checkInputValid(this::loadRBTree, newValue));
         });
 
         vBox.getChildren().addAll(description, textField, buttonBox);
@@ -81,15 +66,51 @@ public class LoadTreeScene extends Scene {
         buttonBox.setAlignment(Pos.CENTER);
     }
 
-    private <T extends Comparable<T>> void loadScene(Stage primaryStage, AnimatedBinaryTree<T> tree, Function<String, T> inputParser) {
-        BinaryTreeAnimationScene<T> animationScene = new BinaryTreeAnimationScene<>(primaryStage, tree, inputParser);
+    private boolean checkInputValid(Consumer<String> treeLoader, String input) {
+        try {
+            treeLoader.accept(input);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    private TreeAndParser<?> loadBST(String text) {
+        if (text.isEmpty()) {
+            return new TreeAndParser<>(new SimpleBinarySearchTreeAnimation<Integer>(), Integer::parseInt);
+        } else if (text.chars().anyMatch(Character::isDigit)) {
+            Function<String, Integer> inputParser = Integer::parseInt;
+            return new TreeAndParser<>(TreeParser.parseBST(text, inputParser, new SimpleBinarySearchTreeAnimation<>()), inputParser);
+        } else {
+            Function<String, String> inputParser = Function.identity();
+            return new TreeAndParser<>(TreeParser.parseBST(text, inputParser, new SimpleBinarySearchTreeAnimation<>()), inputParser);
+        }
+    }
+
+    private TreeAndParser<?> loadRBTree(String text) {
+        if (text.isEmpty()) {
+            return new TreeAndParser<>(new RBTreeAnimation<Integer>(), Integer::parseInt);
+        } else if (text.chars().anyMatch(Character::isDigit)) {
+            Function<String, Integer> inputParser = Integer::parseInt;
+            return new TreeAndParser<>(TreeParser.parseRBTree(text, inputParser, new RBTreeAnimation<>()), inputParser);
+        } else {
+            Function<String, String> inputParser = Function.identity();
+            return new TreeAndParser<>(TreeParser.parseRBTree(text, inputParser, new RBTreeAnimation<>()), inputParser);
+        }
+    }
+
+    private <T extends Comparable<T>> void loadScene(Stage primaryStage, TreeAndParser<T> treeAndParser) {
+        BinaryTreeAnimationScene<T> animationScene = new BinaryTreeAnimationScene<>(primaryStage, treeAndParser.tree, treeAndParser.inputParser);
 
         MyApplication.currentScene = animationScene;
 
-        tree.init(animationScene);
+        treeAndParser.tree.init(animationScene);
 
         primaryStage.setScene(animationScene);
         primaryStage.show();
+    }
+
+    private record TreeAndParser<T extends Comparable<T>>(AnimatedBinaryTree<T> tree, Function<String, T> inputParser) {
     }
 
 }

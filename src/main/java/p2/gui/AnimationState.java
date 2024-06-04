@@ -13,6 +13,7 @@ public class AnimationState {
 
     private final StringProperty operation = new SimpleStringProperty();
     private final StringProperty executing = new SimpleStringProperty();
+    private final StringProperty exception = new SimpleStringProperty();
     private final ObservableList<StackTraceElement> stackTrace = FXCollections.observableArrayList();
 
     public StringProperty getOperation() {
@@ -29,6 +30,14 @@ public class AnimationState {
 
     public void setExecuting(String executing) {
         this.executing.set(executing);
+    }
+
+    public StringProperty getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception.set(exception.getMessage());
     }
 
     public ObservableList<StackTraceElement> getStackTrace() {

@@ -4,10 +4,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Background;
@@ -23,6 +21,8 @@ import java.util.List;
  */
 public class InfoBox extends VBox {
 
+    private final AnimationState state;
+
     /**
      * Constructs a new info box.
      *
@@ -31,38 +31,50 @@ public class InfoBox extends VBox {
     public InfoBox(AnimationState state) {
         super(5);
 
+        this.state = state;
+
         setPadding(new Insets(5));
         setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
         setMaxWidth(300);
 
         getChildren().addAll(
-            createStackTraceTableView(state.getStackTrace()),
-            createExecutingLabel(state.getExecuting()),
-            createOperationLabel(state.getOperation())
+            createStackTraceTableView(),
+            createExecutingLabel(),
+            createOperationLabel()
         );
     }
 
-    private Label createOperationLabel(StringProperty operation) {
+    public void showException() {
+        getChildren().add(createExceptionLabel());
+    }
+
+    private Label createOperationLabel() {
+        return createBoundLabel("Last Operation: ", state.getOperation());
+    }
+
+    private Label createExecutingLabel() {
+        return createBoundLabel("Currently Executing: ", state.getExecuting());
+    }
+
+    private Label createExceptionLabel() {
+        return createBoundLabel("Exception Thrown: ", state.getException());
+    }
+
+    private Label createBoundLabel(String descriptor, StringProperty boundProperty) {
         Label label = new Label();
-        label.textProperty().bind(new SimpleStringProperty("Last Operation: ").concat(operation));
+        label.textProperty().bind(new SimpleStringProperty(descriptor).concat(boundProperty));
         return label;
     }
 
-    private Label createExecutingLabel(StringProperty executing) {
-        Label label = new Label();
-        label.textProperty().bind(new SimpleStringProperty("Currently Executing: ").concat(executing));
-        return label;
-    }
+    private TableView<StackTraceElement> createStackTraceTableView() {
 
-    private TableView<StackTraceElement> createStackTraceTableView(ObservableList<StackTraceElement> stackTrace) {
-
-        TableView<StackTraceElement> tableView = new TableView<>(stackTrace);
+        TableView<StackTraceElement> tableView = new TableView<>(state.getStackTrace());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_LAST_COLUMN);
 
         tableView.maxWidth(290);
 
         TableColumn<StackTraceElement, Integer> indexColumn = new TableColumn<>("#");
-        indexColumn.setCellValueFactory(data -> new SimpleIntegerProperty(stackTrace.indexOf(data.getValue()) + 1).asObject());
+        indexColumn.setCellValueFactory(data -> new SimpleIntegerProperty(state.getStackTrace().indexOf(data.getValue()) + 1).asObject());
         indexColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1));
 
         TableColumn<StackTraceElement, String> nameColumn = new TableColumn<>("Class");
