@@ -44,8 +44,12 @@ public class InfoBox extends VBox {
         );
     }
 
-    public void showException() {
-        getChildren().add(createExceptionLabel());
+    public void showException(Exception e) {
+        Label exceptionLabel = new Label(e.getClass().getSimpleName() + " thrown: " + ": " + e.getMessage());
+        exceptionLabel.setWrapText(true);
+        getChildren().add(exceptionLabel);
+
+        state.setStackTrace(e.getStackTrace());
     }
 
     private Label createOperationLabel() {
@@ -56,13 +60,10 @@ public class InfoBox extends VBox {
         return createBoundLabel("Currently Executing: ", state.getExecuting());
     }
 
-    private Label createExceptionLabel() {
-        return createBoundLabel("Exception Thrown: ", state.getException());
-    }
-
     private Label createBoundLabel(String descriptor, StringProperty boundProperty) {
         Label label = new Label();
         label.textProperty().bind(new SimpleStringProperty(descriptor).concat(boundProperty));
+        label.setWrapText(true);
         return label;
     }
 

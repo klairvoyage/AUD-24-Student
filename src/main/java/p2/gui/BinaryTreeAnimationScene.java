@@ -97,10 +97,8 @@ public class BinaryTreeAnimationScene<T extends Comparable<T>> extends Scene {
         this.animation.disableFinishWithNextStep();
 
         animationState.clear();
-        if (this.animation.isAnimating()) {
-            root.setRight(infoBox);
-            controlBox.enableNextStepButton();
-        }
+        root.setRight(infoBox);
+        controlBox.enableNextStepButton();
 
         animationThread = new Thread(() -> {
             try {
@@ -111,9 +109,8 @@ public class BinaryTreeAnimationScene<T extends Comparable<T>> extends Scene {
                     operationBox.clearInputs();
                 });
             } catch (RuntimeException e) {
-                animationState.setException(e);
-                animationState.setStackTrace(e.getStackTrace());
-                Platform.runLater(infoBox::showException);
+                e.printStackTrace();
+                Platform.runLater(() -> infoBox.showException(e));
             }
 
             Platform.runLater(controlBox::disableNextStepButton);
