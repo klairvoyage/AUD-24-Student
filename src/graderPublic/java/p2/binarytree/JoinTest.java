@@ -40,16 +40,16 @@ public class JoinTest extends P2_TestBase {
 
         Context.Builder<?> context = contextBuilder()
             .subject("RBTree#join")
-            .add("leftRBTree (this)", leftRBTree.toString())
-            .add("rightRBTree (other)", rightRBTree.toString())
+            .add("leftRBTree (this)", treeToString(leftRBTree))
+            .add("rightRBTree (other)", treeToString(rightRBTree))
             .add("joinKey", joinKey)
-            .add("expectedRBTree", expectedRBTree.toString())
+            .add("expectedRBTree", treeToString(expectedRBTree))
             .add("fixColorsAfterInsertion", "disabled");
 
         doAnswer(invocation -> {
             AbstractBinarySearchTree<?, ?> actualTree = (AbstractBinarySearchTree<?, ?>) invocation.getMock();
 
-            context.add("fixColorsAfterInsertion actual RBTree", actualTree.toString());
+            context.add("fixColorsAfterInsertion actual RBTree", treeToString(actualTree));
 
             assertTreeEquals(expectedRBTree, actualTree, context.build(),
                 "fixColorsAfterInsertion has been invoked on an incorrect tree");
@@ -70,7 +70,7 @@ public class JoinTest extends P2_TestBase {
             throw e;
         }
 
-        context.add("actualRBTree", leftRBTree.toString());
+        context.add("actualRBTree", treeToString(leftRBTree));
 
         assertTreeEquals(expectedRBTree, leftRBTree, context.build(), "The joined (left) tree is not correct");
 

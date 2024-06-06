@@ -40,7 +40,7 @@ public class FindBlackNodeTest extends P2_TestBase {
 
         Context.Builder<?> context = contextBuilder()
             .subject("RBTree#findBlackNodeWithBlackHeight")
-            .add("rb tree", tree.toString())
+            .add("rb tree", treeToString(tree))
             .add("target black height", targetBlackHeight)
             .add("total black height", totalBlackHeight)
             .add("find smallest", findSmallest)

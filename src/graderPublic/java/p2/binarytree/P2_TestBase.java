@@ -1,6 +1,7 @@
 package p2.binarytree;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.sourcegrade.jagr.api.testing.extension.JagrExecutionCondition;
 import org.tudalgo.algoutils.tutor.general.annotation.SkipAfterFirstFailedTest;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
 import org.tudalgo.algoutils.tutor.general.json.JsonParameterSet;
@@ -18,6 +19,8 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.fail;
 @SkipAfterFirstFailedTest
 public abstract class P2_TestBase {
 
+    public static final boolean IS_RUN_WITH_JAGR = !new JagrExecutionCondition().evaluateExecutionCondition(null).isDisabled();
+
     @SuppressWarnings("unused")
     public static final Map<String, Function<JsonNode, ?>> customConverters = Map.ofEntries(
         Map.entry("RBTree", JSONConverters::toIntegerRBTree),
@@ -30,7 +33,15 @@ public abstract class P2_TestBase {
         Map.entry("rightRBTree", JSONConverters::toIntegerRBTree)
     );
 
-    void testForBSTAndRBTree(JsonParameterSet params, BiConsumer<BinarySearchTree<Integer>, String> test) {
+    public String treeToString(BinarySearchTree<?> tree) {
+        if (IS_RUN_WITH_JAGR) {
+            return tree.toString().replace("[", "&lsqb;").replace("]", "&rsqb;");
+        }
+
+        return tree.toString();
+    }
+
+    public void testForBSTAndRBTree(JsonParameterSet params, BiConsumer<BinarySearchTree<Integer>, String> test) {
 
         boolean testPerformed = false;
 

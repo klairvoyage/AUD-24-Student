@@ -46,7 +46,7 @@ public class RBTreeCheckerTest extends P2_TestBase {
 
         Context context = contextBuilder()
             .subject("RBTreeChecker#checkRule" + rule)
-            .add("tree", tree.toString())
+            .add("tree", treeToString(tree))
             .add("valid", valid)
             .build();
 

@@ -32,7 +32,7 @@ public class TraversingTest extends P2_TestBase {
 
         Context.Builder<?> context = contextBuilder()
             .subject(className + "#" + methodName)
-            .add("bst", tree.toString())
+            .add("bst", treeToString(tree))
             .add("startNode", startNode)
             .add("max", max)
             .add("predicate", "i <= " + limit)
