@@ -60,7 +60,7 @@ public interface SearchTree<T extends Comparable<T>> {
      */
     default List<T> inOrder() {
         List<T> result = new ArrayList<>();
-        inOrder(findSmallest(), result, Integer.MAX_VALUE, t -> true);
+        inOrder(getRoot(), result, Integer.MAX_VALUE, t -> true);
         return result;
     }
 
