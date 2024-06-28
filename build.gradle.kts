@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.algomate)
+    alias(libs.plugins.jagr)
+    alias(libs.plugins.javafxplugin)
 }
 
 exercise {
-    assignmentId.set("h03")
+    assignmentId.set("p3")
 }
 
 submission {
@@ -18,4 +20,23 @@ submission {
     requireTests = false
     // Optionally require public grader for mainBuildSubmission task. Default is false
     requireGraderPublic = false
+}
+
+configurations.all {
+    resolutionStrategy {
+        configurations.all {
+            resolutionStrategy {
+                force(
+                    libs.algoutils.student,
+                    libs.algoutils.tutor,
+                    libs.junit.pioneer,
+                )
+            }
+        }
+    }
+}
+
+javafx {
+    version = "21"
+    modules("javafx.controls", "javafx.swing")
 }

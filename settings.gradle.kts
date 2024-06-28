@@ -14,4 +14,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "P03-Student"
+rootProject.name = "P3-Student"
