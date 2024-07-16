@@ -196,7 +196,7 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @param joinKey The key to insert into the tree to join the two trees.
      */
     public void join(RBTree<T> other, T joinKey) {
-        crash(); //TODO: H4 c) - remove if implemented
+        //TODO: H4 c) - remove if implemented
     }
 
     /**
