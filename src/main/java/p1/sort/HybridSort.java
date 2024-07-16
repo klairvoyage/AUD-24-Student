@@ -78,7 +78,21 @@ public class HybridSort<T> implements Sort<T> {
      * @param right The rightmost index of the list to be sorted. (inclusive)
      */
     public void mergeSort(SortList<T> sortList, int left, int right) {
-        crash(); //TODO: H2 b) - remove if implemented
+        // Check if there is more than one element to sort
+        if (left<right) {
+            // If the number of elements is less than the threshold, use bubbleSort
+            if ((right-left+1)<getK()) bubbleSort(sortList, left, right);
+            else {
+                // Calculate the middle index to split the list into two halves (rounded down)
+                int mid = (left+right)/2;
+                // Recursively sort the left part of the list
+                mergeSort(sortList, left, mid);
+                // Recursively sort the right part of the list
+                mergeSort(sortList, mid+1, right);
+                // Merge the two sorted halves into one sorted list
+                merge(sortList, left, mid, right);
+            }
+        }
     }
 
     /**
@@ -99,8 +113,31 @@ public class HybridSort<T> implements Sort<T> {
      * @param middle The index that separates the two sublists. It is the last index that belongs to the left sublist.
      * @param right The rightmost index of the two sublists to be merged. (inclusive)
      */
-    public void merge(SortList<T> sortList, int left, int middle, int right) {
-        crash(); //TODO: H2 b) - remove if implemented
+    public void merge(SortList<T> sortList, int left, int middle, int right) { // requires left<=mid<=right
+        // Create a temporary SortList to store the merged elements
+        SortList<T> temp = new ArraySortList<>(right-left+1);
+
+        // Initialize pointers for both sublists
+        int p = left; // Position in the left sublist
+        int q = middle + 1; // Position in the right sublist
+
+        // Merge elements from both sublists into the temporary list
+        for (int i=0; i<(right-left+1); i++) {
+            // If all elements from the right sublist are merged or
+            // the current element in the left sublist is less than or equal to the current element in the right sublist
+            if (q>right || ((p<=middle) && (comparator.compare(sortList.get(p), sortList.get(q)) <= 0))) {
+                temp.set(i, sortList.get(p));
+                p++; // Move to the next element in the left sublist
+            } else {
+                // If the current element in the right sublist is less than the current element in the left sublist
+                temp.set(i, sortList.get(q));
+                q++; // Move to the next element in the right sublist
+            }
+        }
+        // Copy the merged elements back to the original list
+        for (int i=0; i<(right-left+1); i++) {
+            sortList.set(i+left, temp.get(i));
+        }
     }
 
     /**
@@ -113,8 +150,19 @@ public class HybridSort<T> implements Sort<T> {
      * @param right The rightmost index of the list to be sorted.
      */
     public void bubbleSort(SortList<T> sortList, int left, int right) {
-
-        crash(); //TODO: H2 a) - remove if implemented
+        // Outer loop: Start from the rightmost element and move towards the left
+        for (int i=right; i>=left; i--) {
+            // Inner loop: Traverse the list from the leftmost element to the i-th element
+            for (int j=left; j<i; j++) {
+                // Compare the current element with the next element
+                if (comparator.compare(sortList.get(j), sortList.get(j+1)) > 0) {
+                    // Swap the elements if they are in the wrong order
+                    T temp = sortList.get(j+1);
+                    sortList.set(j+1, sortList.get(j));
+                    sortList.set(j, temp);
+                }
+            }
+        }
     }
 
 }
