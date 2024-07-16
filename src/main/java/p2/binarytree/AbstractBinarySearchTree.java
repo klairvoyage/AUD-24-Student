@@ -67,8 +67,8 @@ public abstract class AbstractBinarySearchTree<T extends Comparable<T>, N extend
         }
         node.setParent(px); // Set the parent of the new node to px
 
-        // If the parent is null, it means the tree was empty and the new node becomes the root
-        if (px == null) root = node;
+        // If the parent is still the initialPX, it means the tree was empty and the new node becomes the root
+        if (px == initialPX) root = node;
         else { // Attach the new node to the correct position in the tree
             // If the new node's key is smaller, set it as the left child
             if (px.getKey().compareTo(node.getKey()) > 0) px.setLeft(node);
