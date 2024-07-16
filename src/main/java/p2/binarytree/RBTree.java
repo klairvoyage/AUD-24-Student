@@ -236,7 +236,55 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @return A black node with the target black height.
      */
     public RBNode<T> findBlackNodeWithBlackHeight(int targetBlackHeight, int totalBlackHeight, boolean findSmallest) {
-        return crash(); //TODO: H4 b) - remove if implemented
+        //TODO: H4 b) - remove if implemented
+        if (targetBlackHeight>=0 && targetBlackHeight<=totalBlackHeight) // Check if target height is within valid range
+            // Call the helper method to find the node with the target black height
+            return loremIpsumHelper(root, targetBlackHeight, findSmallest);
+        else
+            // Throw an exception if the target black height is not valid
+            throw new IllegalArgumentException("Target black height (" + targetBlackHeight + ") exceeds total black height!");
+    }
+
+    /**
+     * Recursively finds a black node with the given black height in the tree.
+     * <p>
+     * Depending on the value of the {@code findSmallest} parameter, it will return either the smallest or
+     * the largest node that meets this criterion.
+     * <p>
+     * It assumes that the tree is non-empty and that there is a node with the target black height.
+     *
+     * @param rbNode            The current node in the tree.
+     * @param targetBlackHeight The target black height to find a node with.
+     * @param findSmallest      Whether to find the smallest or largest node with the target black height.
+     * @return The black node with the specified black height.
+     */
+    private RBNode<T> loremIpsumHelper(RBNode<T> rbNode, int targetBlackHeight, boolean findSmallest) {
+        if (rbNode == null) return null; // Stop Condition: if the node is null, return null
+
+        // Variable to store the result node
+        RBNode<T> result = null;
+
+        // If the current node is black and has the target black height, it is a candidate
+        if (rbNode.isBlack() && blackHeight(rbNode) == targetBlackHeight) result = rbNode; // candidate
+
+        // Recursively find the target node in the left subtree
+        RBNode<T> leftSubtree = loremIpsumHelper(rbNode.getLeft(), targetBlackHeight, findSmallest);
+        // Recursively find the target node in the right subtree
+        RBNode<T> rightSubtree = loremIpsumHelper(rbNode.getRight(), targetBlackHeight, findSmallest);
+
+        // Determine the smallest or largest node based on the findSmallest flag
+        if (findSmallest) {
+            // For finding the smallest node, prefer the left subtree
+            if (leftSubtree != null) result = leftSubtree;
+            // If no left subtree result and no current result, prefer the right subtree
+            else if (result == null && rightSubtree != null) result = rightSubtree;
+        } else {
+            // For finding the largest node, prefer the right subtree
+            if (rightSubtree != null) result = rightSubtree;
+            // If no right subtree result and no current result, prefer the left subtree
+            else if (result == null && leftSubtree != null) result = leftSubtree;
+        }
+        return result;
     }
 
     @Override
