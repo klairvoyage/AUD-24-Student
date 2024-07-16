@@ -37,6 +37,24 @@ public class CardComparator implements Comparator<Card> {
      */
     @Override
     public int compare(Card o1, Card o2) {
-        return crash(); //TODO: H1 a) - remove if implemented
+        // Check if either of the card objects is null and throw a NullPointerException if true
+        if (o1 == null || o2 == null) throw new NullPointerException();
+        // Compare the card values using the functional method int compare (from the functional interface Comparator)
+        int comparisonValue = Integer.compare(o1.cardValue(), o2.cardValue());
+        // If the card values are not equal, return the comparison result
+        if (comparisonValue != 0) return comparisonValue;
+        // If the card values are equal, compare their colors; the getValue method converts the CardColor enum to an int
+        else return Integer.compare(getValue(o1.cardColor()), getValue(o2.cardColor()));
+    }
+    private int getValue(CardColor cardColor) {
+        // Check if the cardColor is null and throw an IllegalArgumentException if true
+        if (cardColor == null) throw new IllegalArgumentException();
+        // Use a switch statement to assign an integer value to each card color
+        return switch (cardColor) {
+            case DIAMONDS -> 1; // Diamonds are the lowest
+            case HEARTS -> 2;
+            case SPADES -> 3;
+            case CLUBS -> 4; // Clubs are the highest
+        };
     }
 }
