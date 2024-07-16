@@ -1,5 +1,6 @@
 package p3.graph;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.tudalgo.algoutils.student.Student.crash;
@@ -36,19 +37,50 @@ public class AdjacencyMatrix implements AdjacencyRepresentation {
         matrix = new boolean[size][size];
     }
 
+    /**
+     * Adds a directed edge from the 'from' vertex to the 'to' vertex.
+     *
+     * @param from the starting vertex
+     * @param to the ending vertex
+     * @throws IndexOutOfBoundsException if the vertex indices are out of bounds
+     */
     @Override
     public void addEdge(int from, int to) {
-        crash(); //TODO: H1 a) - remove if implemented
+        //TODO: H1 a) - remove if implemented
+        if (from < 0 || from >= matrix.length || to < 0 || to >= matrix.length) throw new IndexOutOfBoundsException();
+        matrix[from][to] = true; // Set the entry in the matrix to true, if the indices were valid
     }
 
+    /**
+     * Checks if there is a directed edge from the 'from' vertex to the 'to' vertex.
+     *
+     * @param from the starting vertex
+     * @param to the ending vertex
+     * @return true if there is an edge from 'from' to 'to', false otherwise
+     * @throws IndexOutOfBoundsException if the vertex indices are out of bounds
+     */
     @Override
     public boolean hasEdge(int from, int to) {
-        return crash(); //TODO: H1 a) - remove if implemented
+        //TODO: H1 a) - remove if implemented
+        if (from < 0 || from >= matrix.length || to < 0 || to >= matrix.length) throw new IndexOutOfBoundsException();
+        return matrix[from][to]; // Return whether the edge exists, if the indices were valid
     }
 
+    /**
+     * Returns a set of indices of all vertices adjacent to the given vertex.
+     *
+     * @param index the vertex whose adjacent vertices are to be found
+     * @return a set of indices of adjacent vertices
+     * @throws IndexOutOfBoundsException if the vertex index is out of bounds
+     */
     @Override
     public Set<Integer> getAdjacentIndices(int index) {
-        return crash(); //TODO: H1 a) - remove if implemented
+        //TODO: H1 a) - remove if implemented
+        if (index < 0 || index >= matrix.length) throw new IndexOutOfBoundsException(); // Check if the index is valid
+        Set<Integer> adjacentIndices = new HashSet<>(); // Create a set to store the adjacent vertices
+        // Iterate through the columns of the row corresponding to the index to find adjacent vertices
+        for (int i=0; i<matrix.length; i++) if (hasEdge(index, i)) adjacentIndices.add(i);
+        return adjacentIndices;
     }
 
     @Override
