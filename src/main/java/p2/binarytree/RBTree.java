@@ -38,7 +38,10 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
 
     @Override
     public void insert(T value) {
-        crash(); //TODO: H2 c) - remove if implemented
+        //TODO: H2 c) - remove if implemented
+        RBNode<T> newNode = createNode(value); // Create a new node with the given value using the createNode method
+        super.insert(newNode, sentinel); // Insert new node into the tree; sentinel node passed as the initial parent
+        fixColorsAfterInsertion(newNode); // Fix colors to ensure red-black tree properties are maintained after insert
     }
 
     /**
