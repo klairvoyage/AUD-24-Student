@@ -118,7 +118,31 @@ public class AutoComplete {
      * @return the smallest node in the tree that starts with the given prefix.
      */
     public BinaryNode<String> prefixSearch(String prefix) {
-        return crash(); //TODO: H3 c) - remove if implemented
+        //TODO: H3 c) - remove if implemented
+        return prefixSearchRecursive(searchTree.getRoot(), prefix, null); // Start recursive search from root
+    }
+
+    /**
+     * Recursively searches for the smallest node that starts with the given prefix or {@code null} if no such node exists.
+     *
+     * @param node the current node.
+     * @param prefix the prefix to search for.
+     * @param bestMatch the current best match.
+     * @return the smallest node in the tree that starts with the given prefix.
+     */
+    private BinaryNode<String> prefixSearchRecursive(BinaryNode<String> node, String prefix, BinaryNode<String> bestMatch) {
+        if (node == null) return bestMatch; // Stop Condition: if the node is null, return the best match found so far
+        // Check if the current node's key starts with the prefix
+        if (node.getKey().startsWith(prefix)) {
+            // If it does, update the best match to the current node
+            bestMatch = node;
+            // Continue searching in the left subtree to find the smallest node
+            return prefixSearchRecursive(node.getLeft(), prefix, bestMatch);
+        }
+        // If the current node's key is greater than the prefix, search in the left subtree
+        else if (node.getKey().compareTo(prefix) > 0) return prefixSearchRecursive(node.getLeft(), prefix, bestMatch);
+        // If the current node's key is less than the prefix, search in the right subtree
+        else return prefixSearchRecursive(node.getRight(), prefix, bestMatch);
     }
 
     /**
