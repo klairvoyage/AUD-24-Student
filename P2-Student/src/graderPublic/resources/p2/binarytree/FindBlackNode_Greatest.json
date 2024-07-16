@@ -1,0 +1,56 @@
+[
+  {
+    "RBTree": "[,1,B,]",
+    "totalBlackHeight": 1,
+    "targetBlackHeight": 1,
+    "expectedNode": 1
+  },
+  {
+    "RBTree": "[[,1,B,],2,B,[,3,B,]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 1,
+    "expectedNode": 3
+  },
+  {
+    "RBTree": "[[[,1,B,],2,B,[,3,B,]],4,B,[[,5,B,],6,B,[,7,B,]]]",
+    "totalBlackHeight": 3,
+    "targetBlackHeight": 2,
+    "expectedNode": 6
+  },
+  {
+    "RBTree": "[[[,1,B,],2,B,[,3,B,]],4,B,[[,5,B,],6,B,[,7,B,]]]",
+    "totalBlackHeight": 3,
+    "targetBlackHeight": 1,
+    "expectedNode": 7
+  },
+  {
+    "RBTree": "[[,1,R,],2,B,[,3,R,]]",
+    "totalBlackHeight": 1,
+    "targetBlackHeight": 1,
+    "expectedNode": 2
+  },
+  {
+    "RBTree": "[[[,1,B,],2,R,[,3,B,]],4,B,[[,5,B,],6,R,[,7,B,]]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 1,
+    "expectedNode": 7
+  },
+  {
+    "RBTree": "[[[,1,R,],2,B,[,3,R,]],4,B,[[,5,R,],6,B,[,7,R,]]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 1,
+    "expectedNode": 6
+  },
+  {
+    "RBTree": "[[[,1,R,],2,B,[,3,R,]],4,B,[,6,B,[,7,R,]]]",
+    "totalBlackHeight": 2,
+    "targetBlackHeight": 1,
+    "expectedNode": 6
+  },
+  {
+    "RBTree": "[[[[[,0,B,],1,R,[,2,B,[,3,R,]]],4,B,[[,5,B,[,6,R,]],7,R,[,8,B,]]],9,R,[[[[,10,R,],11,B,[,12,R,]],13,R,[[,14,R,],15,B,[,16,R,]]],17,B,[[[,18,R,],19,B,],20,R,[[,21,R,],22,B,]]]],23,B,[[[[,24,R,],25,B,[,26,R,]],27,B,[[,28,R,],29,B,]],30,R,[[[,31,B,],32,R,[[,33,R,],34,B,[,35,R,]]],36,B,[[,37,R,],38,B,[,39,R,]]]]]",
+    "totalBlackHeight": 3,
+    "targetBlackHeight": 1,
+    "expectedNode": 38
+  }
+]

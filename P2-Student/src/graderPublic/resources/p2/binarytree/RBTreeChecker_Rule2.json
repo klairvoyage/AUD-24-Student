@@ -1,0 +1,14 @@
+[
+  {
+    "RBTree": "[,1,R,]",
+    "valid": false
+  },
+  {
+    "RBTree": "[,1,B,]",
+    "valid": true
+  },
+  {
+    "RBTree": "[]",
+    "valid": true
+  }
+]
