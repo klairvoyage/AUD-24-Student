@@ -1,0 +1,44 @@
+{
+  "validIndexTest": [
+    {
+      "value": "testen",
+      "position": 0,
+      "expected": 13
+    },
+    {
+      "value": "testen",
+      "position": 1,
+      "expected": 4
+    },
+    {
+      "value": "testen",
+      "position": 2,
+      "expected": 19
+    },
+    {
+      "value": "testen",
+      "position": 3,
+      "expected": 18
+    },
+    {
+      "value": "testen",
+      "position": 4,
+      "expected": 4
+    },
+    {
+      "value": "testen",
+      "position": 5,
+      "expected": 19
+    }
+  ],
+  "invalidCharTest": [
+    {
+      "value": "t3sten!",
+      "position": 0
+    },
+    {
+      "value": "t3sten!",
+      "position": 5
+    }
+  ]
+}
