@@ -122,28 +122,36 @@ public abstract class AbstractBinarySearchTree<T extends Comparable<T>, N extend
      */
     protected void findNext(N node, List<? super T> result, int max, Predicate<? super T> limit) {
         //TODO: H3 b) - remove if implemented
-        if (node == null || result == null || max <= 0 || limit == null) return;
+        findNext(node, null, max, result, limit); // Start search from given node, passing null as previous node
+    }
 
-        Stack<N> stack = new Stack<>(); // Stack to manage traversal
-        N current = node; // Set given node to start traversal
-        boolean startAdding = false; // Flag to indicate when to start adding elements to the result list
+    /**
+     * A private helper method that recursively finds the next elements in the tree in ascending order.
+     * This method can move to the parent node and traverse the tree directly from the given node.
+     *
+     * @param node      The current node being considered.
+     * @param prev      The previous node visited.
+     * @param max       The maximum number of elements to include in the result.
+     * @param result    The list to store the elements in.
+     * @param predicate The predicate to test the elements against.
+     */
+    private void findNext(N node, N prev, int max, List<? super T> result, Predicate<? super T> predicate) {
+        // If the current node is null or the result list is full, or the predicate fails, stop the traversal
+        if (node == null || result.size() >= max || (prev == null && !predicate.test(node.getKey()))) return;
 
-        // Traverse the tree until stack is empty or maximum number of elements is reached
-        while ((!stack.isEmpty() || current!=null) && result.size()<max) {
-            // Reach the leftmost node of the current subtree
-            while (current != null) {
-                stack.push(current); // Push the current node to the stack
-                current = current.getLeft(); // Move to the left child
-            }
-            current = stack.pop(); // Pop an element from the stack
-            if (current==node || startAdding) { // Check if we should start adding elements to the result list
-                startAdding = true; // Start adding elements from now
-                if (!limit.test(current.getKey())) break; // Check the predicate limit & potentially stop the traversal
-                result.add(current.getKey()); // Add the current node's key to the result list
-                if (result.size() >= max) break; // Check if we have reached the maximum number of elements
-            }
-            current = current.getRight(); // Move to the right child to continue the traversal
+        // If the previous node is not the right child of the current node and the current node satisfies the predicate
+        if ((prev == null || node.getRight() != prev) && result.size() < max) {
+            if (predicate.test(node.getKey())) result.add(node.getKey()); // Add current node's key to the result list
+            else return; // Stop if the predicate fails
         }
+
+        // Traverse the right subtree if it exists and the previous node is not the right child
+        if (node.hasRight() && prev != node.getRight() && result.size() < max)
+            inOrder(node.getRight(), result, max, predicate); // Use in-order traversal on the right subtree
+
+        // Move up to parent node, if there are still slots left in the result list & the current node is not the root
+        if (result.size() < max && node != root)
+            findNext(node.getParent(), node, max, result, predicate); // Move to the parent node
     }
 
     @Override
