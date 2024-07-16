@@ -18,7 +18,29 @@ public class HybridOptimizer {
      * @param <T> the type of the elements to be sorted.
      */
     public static <T> int optimize(HybridSort<T> hybridSort, T[] array) {
-        return crash(); //TODO: H2 c) - remove if implemented
+        //TODO: H2 c) - remove if implemented
+        int minK = 0; // Initialize the variable to store the optimal k-value
+        int minOPs = Integer.MAX_VALUE; // Initialize the variable to store the minimum number of operations
+
+        // Iterate over all possible k-values from 0 to array.length + 1
+        for (int k=0; k<=array.length+1; k++) {
+            // Set the current k-value for the sorting algorithm in the HybridSort object
+            hybridSort.setK(k);
+            // Convert the array to an ArraySortList
+            ArraySortList<T> sortList = new ArraySortList<>(array);
+            // Perform the sorting with the current k-value
+            hybridSort.sort(sortList);
+
+            // Calculate the total number of read and write operations at value k
+            int currentOps = sortList.getReadCount() + sortList.getWriteCount();
+
+            // Check if still falling monotonously
+            if (currentOps <= minOPs) {
+                minOPs = currentOps; // Update the minimum number of operations
+                minK = k; // Update the optimal k-value
+            } else break; // Stop if the number of operations starts increasing
+        }
+        return minK; // Return the optimal k-value
     }
 
 }
