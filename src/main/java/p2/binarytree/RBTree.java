@@ -48,7 +48,52 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @param z The node that was inserted.
      */
     protected void fixColorsAfterInsertion(RBNode<T> z) {
-        crash(); //TODO: H2 b) - remove if implemented
+        //TODO: H2 b) - remove if implemented
+        while (z!=null && z.getParent()!=null && z.getParent().isRed()) { // Loop to fix as long as there is a violation
+            RBNode<T> parent = z.getParent(); // parent
+            RBNode<T> grandParent = parent.getParent(); // grandparent
+            // Check if the parent is the left child of the grandparent
+            if (grandParent!=null && grandParent.getLeft()!=null && parent.getKey()==grandParent.getLeft().getKey()) {
+                RBNode<T> uncle = grandParent.getRight(); // uncle
+                // Case 1: Uncle is red
+                if (uncle!=null && uncle.isRed()) {
+                    parent.setColor(Color.BLACK); // Recolor the parent to black
+                    uncle.setColor(Color.BLACK); // Recolor the uncle to black
+                    grandParent.setColor(Color.RED); // Recolor the grandparent to red
+                    z = grandParent; // Move up to the grandparent
+                } else {
+                    // Case 2: Node is the right child
+                    if (parent.getRight()!=null && z.getKey()==parent.getRight().getKey()) {
+                        z = parent; // Move up to the parent
+                        rotateLeft(z); // Perform left rotation
+                    }
+                    // Case 3: Node is the left child
+                    z.getParent().setColor(Color.BLACK); // Recolor the parent to black
+                    z.getParent().getParent().setColor(Color.RED); // Recolor the grandparent to red
+                    rotateRight(z.getParent().getParent()); // Perform right rotation on grandparent
+                }
+            } else { // Symmetric cases for when the parent is the right child of the grandparent
+                RBNode<T> uncle = grandParent.getLeft(); // assert grandParent != null;
+                // Case 1: Uncle is red
+                if (uncle!=null && uncle.isRed()) {
+                    parent.setColor(Color.BLACK); // Recolor the parent to black
+                    uncle.setColor(Color.BLACK); // Recolor the uncle to black
+                    grandParent.setColor(Color.RED); // Recolor the grandparent to red
+                    z = grandParent; // Move up to the grandparent
+                } else {
+                    // Case 2: Node is the left child
+                    if (parent.getLeft()!=null && z==parent.getLeft()) {
+                        z = parent; // Move up to the parent
+                        rotateRight(z); // Perform right rotation
+                    }
+                    // Case 3: Node is the right child
+                    z.getParent().setColor(Color.BLACK); // Recolor the parent to black
+                    z.getParent().getParent().setColor(Color.RED); // Recolor the grandparent to red
+                    rotateLeft(z.getParent().getParent()); // Perform left rotation on grandparent
+                }
+            }
+        }
+        if (root!=null) root.setColor(Color.BLACK); // Ensure the root is always black
     }
 
     /**
@@ -59,7 +104,25 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @param x The node to rotate.
      */
     protected void rotateLeft(RBNode<T> x) {
-        crash(); //TODO: H2 b) - remove if implemented
+        //TODO: H2 b) - remove if implemented
+        if (x.getRight() != null) {
+            RBNode<T> y = x.getRight(); // y is x's right child
+            x.setRight(y.getLeft()); // x's right child becomes y's left child
+            if (y.getLeft() != null) y.getLeft().setParent(x); // Set x as the parent of y's left child
+            y.setParent(x.getParent()); // Set y's parent to be x's parent
+
+            // If x was the root, now y becomes the root
+            if (x.getParent() == sentinel) root = y;
+            else {
+                // If x was the left child, y becomes the left child
+                if (x == x.getParent().getLeft()) x.getParent().setLeft(y);
+                // If x was the right child, y becomes the right child
+                else x.getParent().setRight(y);
+            }
+
+            y.setLeft(x); // x becomes the left child of y
+            x.setParent(y); // y becomes the parent of x
+        }
     }
 
     /**
@@ -70,7 +133,25 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @param x The node to rotate.
      */
     protected void rotateRight(RBNode<T> x) {
-        crash(); //TODO: H2 b) - remove if implemented
+        //TODO: H2 b) - remove if implemented
+        if (x.getLeft() != null) {
+            RBNode<T> y = x.getLeft(); // y is x's left child
+            x.setLeft(y.getRight()); // x's left child becomes y's right child
+            if (y.getRight() != null) y.getRight().setParent(x); // Set x as the parent of y's right child
+            y.setParent(x.getParent()); // Set y's parent to be x's parent
+
+            // If x was the root, now y becomes the root
+            if (x.getParent() == sentinel) root = y;
+            else {
+                // If x was the right child, y becomes the right child
+                if (x == x.getParent().getRight()) x.getParent().setRight(y);
+                // If x was the left child, y becomes the left child
+                else x.getParent().setLeft(y);
+            }
+
+            y.setRight(x); // x becomes the right child of y
+            x.setParent(y); // y becomes the parent of x
+        }
     }
 
     @Override
