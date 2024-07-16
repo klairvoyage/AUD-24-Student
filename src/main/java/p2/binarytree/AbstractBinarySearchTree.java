@@ -3,6 +3,7 @@ package p2.binarytree;
 import p2.SearchTree;
 
 import java.util.List;
+import java.util.Stack;
 import java.util.function.Predicate;
 
 import static org.tudalgo.algoutils.student.Student.crash;
@@ -52,7 +53,28 @@ public abstract class AbstractBinarySearchTree<T extends Comparable<T>, N extend
      *                  should be {@code null}.
      */
     protected void insert(N node, N initialPX) {
-        crash(); //TODO: H2 a) - remove if implemented
+        //TODO: H2 a) - remove if implemented
+        N x = root; // Start from the root of the tree
+        N px = initialPX; // Initialize px with the initial parent value (null for normal trees)
+
+        // Traverse the tree to find the appropriate position for the new node
+        while (x != null) {
+            // Update px to the current node
+            px = x;
+            // If the new node's key is smaller, move to the left child
+            if (x.getKey().compareTo(node.getKey()) > 0) x = x.getLeft();
+            else x = x.getRight(); // Otherwise, move to the right child
+        }
+        node.setParent(px); // Set the parent of the new node to px
+
+        // If the parent is null, it means the tree was empty and the new node becomes the root
+        if (px == null) root = node;
+        else { // Attach the new node to the correct position in the tree
+            // If the new node's key is smaller, set it as the left child
+            if (px.getKey().compareTo(node.getKey()) > 0) px.setLeft(node);
+            // If the new node's key is greater or equal, set it as the right child
+            else px.setRight(node);
+        }
     }
 
     /**
