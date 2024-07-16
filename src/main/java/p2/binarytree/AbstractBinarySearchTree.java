@@ -121,7 +121,29 @@ public abstract class AbstractBinarySearchTree<T extends Comparable<T>, N extend
      *               the traversal stops.
      */
     protected void findNext(N node, List<? super T> result, int max, Predicate<? super T> limit) {
-        crash(); //TODO: H13 b) - remove if implemented
+        //TODO: H3 b) - remove if implemented
+        if (node == null || result == null || max <= 0 || limit == null) return;
+
+        Stack<N> stack = new Stack<>(); // Stack to manage traversal
+        N current = node; // Set given node to start traversal
+        boolean startAdding = false; // Flag to indicate when to start adding elements to the result list
+
+        // Traverse the tree until stack is empty or maximum number of elements is reached
+        while ((!stack.isEmpty() || current!=null) && result.size()<max) {
+            // Reach the leftmost node of the current subtree
+            while (current != null) {
+                stack.push(current); // Push the current node to the stack
+                current = current.getLeft(); // Move to the left child
+            }
+            current = stack.pop(); // Pop an element from the stack
+            if (current==node || startAdding) { // Check if we should start adding elements to the result list
+                startAdding = true; // Start adding elements from now
+                if (!limit.test(current.getKey())) break; // Check the predicate limit & potentially stop the traversal
+                result.add(current.getKey()); // Add the current node's key to the result list
+                if (result.size() >= max) break; // Check if we have reached the maximum number of elements
+            }
+            current = current.getRight(); // Move to the right child to continue the traversal
+        }
     }
 
     @Override
