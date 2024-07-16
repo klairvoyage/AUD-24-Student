@@ -205,7 +205,21 @@ public class RBTree<T extends Comparable<T>> extends AbstractBinarySearchTree<T,
      * @return the black height of the tree.
      */
     public int blackHeight() {
-        return crash(); //TODO: H4 a) - remove if implemented
+        //TODO: H4 a) - remove if implemented
+        return blackHeight(root); // Call the helper method to calculate the black height from the root of the tree
+    }
+
+    /**
+     * Returns the black height of the given node, i.e. the number of black nodes on a path from the given node to a leaf.
+     *
+     * @param rbNode the node for which it is calculated.
+     * @return the black height of the given node.
+     */
+    private int blackHeight(RBNode<T> rbNode) {
+        if (rbNode == null) return 0; // Stop Condition: If node is null; return 0 since it doesn't contribute to height
+        // If the black heights of the left and right subtrees are not equal, the tree violates the red-black properties
+        if (blackHeight(rbNode.getLeft()) != blackHeight(rbNode.getRight())) throw new RBTreeException("checkAllRules");
+        return blackHeight(rbNode.getLeft()) + (rbNode.isBlack() ? 1 : 0); // increments height if current node is black
     }
 
     /**
