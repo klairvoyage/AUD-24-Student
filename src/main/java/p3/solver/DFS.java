@@ -68,9 +68,26 @@ public class DFS<N> implements GraphTraverser<N> {
         this.finishTimes = new HashMap<>();
     }
 
+    /**
+     * Traverses the entire graph using depth-first search (DFS).
+     * Initializes necessary data structures and visits each node if it has not been visited yet.
+     *
+     * @param consumer a function to process each node and its finish time when the node is completely processed
+     */
     @Override
     public void traverse(ObjIntConsumer<N> consumer) {
-        crash(); //TODO: H2 a) - remove if implemented
+        //TODO: H2 a) - remove if implemented
+        init();
+        /**
+         * SHOULD BE PUT IN "protected void init()"
+         * // Set all nodes' colors to white and predecessors to null
+         * for (N node : graph.getNodes()) {
+         *      colors.put(node, Color.WHITE);
+         *      predecessors.put(node, null);
+         * }
+         */
+        // Visit each node, if it is white (unvisited)
+        for (N node : graph.getNodes()) if (colors.get(node) == Color.WHITE) visit(consumer, node);
     }
 
     /**
@@ -91,7 +108,14 @@ public class DFS<N> implements GraphTraverser<N> {
      * the time is set to 0.
      */
     protected void init() {
-        crash(); //TODO: H2 a) - remove if implemented
+        //TODO: H2 a) - remove if implemented
+        colors.clear();
+        finishTimes.clear();
+        discoveryTimes.clear();
+        predecessors.clear();
+        // "SET AL NODES' COLORS TO WHITE AND PREDECESSORS TO NULL" is missing here
+        cyclic = false;
+        time = 0;
     }
 
     /**
@@ -104,7 +128,22 @@ public class DFS<N> implements GraphTraverser<N> {
      * @param current  Node that is processed by this method
      */
     protected void visit(ObjIntConsumer<N> consumer, N current) {
-        crash(); //TODO: H2 a) & b) - remove if implemented
+        //TODO: H2 a) & b) - remove if implemented
+        time++;
+        discoveryTimes.put(current, time);
+        colors.put(current, Color.GRAY); // grey = current not was visited but not fully processed
+        for (N adj : graph.getAdjacentNodes(current)) { // Process each adjacent node
+            if (colors.get(adj) == Color.WHITE) { // If the adjacent node is white, visit it recursively
+                predecessors.put(adj, current);
+                visit(consumer, adj);
+            } else if (colors.get(adj) == Color.GRAY) cyclic = true; // Found a back edge (DFS tree ancestor) -> cyclic
+        }
+        // Color the node black and set finish time
+        colors.put(current, Color.BLACK);
+        time++;
+        finishTimes.put(current, time);
+        // Pass the node and its finish time to the consumer
+        consumer.accept(current, time);
     }
 
     /**
