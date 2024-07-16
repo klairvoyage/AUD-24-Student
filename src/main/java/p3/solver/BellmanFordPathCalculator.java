@@ -51,7 +51,11 @@ public class BellmanFordPathCalculator<N> implements PathCalculator<N> {
 
     @Override
     public List<N> calculatePath(N start, N end) {
-        return crash(); //TODO: H3 e) - remove if implemented
+        //TODO: H3 e) - remove if implemented
+        initSSSP(start); // Initialize distances and predecessors for all nodes
+        processGraph(); // Relax edges repeatedly to find the shortest paths
+        if (hasNegativeCycle()) throw new CycleException("The graph is cyclic.");
+        return reconstructPath(start, end); // Reconstruct the shortest path from start to end
     }
 
 
@@ -61,14 +65,21 @@ public class BellmanFordPathCalculator<N> implements PathCalculator<N> {
      * @param start the start node of the algorithm.
      */
     protected void initSSSP(N start) {
-        crash(); //TODO: H3 a) - remove if implemented
+        //TODO: H3 a) - remove if implemented
+        for (N node : graph.getNodes()) { // Initialize distances to MAX_VALUE & predecessors to null for all nodes
+            distances.put(node, Integer.MAX_VALUE);
+            predecessors.put(node, null);
+        }
+        distances.put(start, 0); // Set the distance to the start node to 0
     }
 
     /**
      * Processes the given graph with the Bellman-Ford algorithm.
      */
     protected void processGraph() {
-        crash(); //TODO: H3 c) - remove if implemented
+        //TODO: H3 c) - remove if implemented
+        for (int i=1; i<graph.getNodes().size(); i++)
+            for (Edge<N> edge : graph.getEdges()) relax(edge); // Relax all edges in the graph
     }
 
     /**
@@ -80,7 +91,13 @@ public class BellmanFordPathCalculator<N> implements PathCalculator<N> {
      * @param edge the edge to relax.
      */
     protected void relax(Edge<N> edge) {
-        crash(); //TODO: H3 b) - remove if implemented
+        //TODO: H3 b) - remove if implemented
+        if ((distances.get(edge.from()) != Integer.MAX_VALUE) && // starting node of the edge has already been reached
+            (distances.get(edge.from()) + edge.weight() < distances.get(edge.to()))) {
+            // Relax the edge if a shorter path to the destination node is found
+            distances.put(edge.to(), distances.get(edge.from()) + edge.weight());
+            predecessors.put(edge.to(), edge.from());
+        }
     }
 
     /**
@@ -89,7 +106,15 @@ public class BellmanFordPathCalculator<N> implements PathCalculator<N> {
      * @return {@code true} if the graph contains a negative cycle, {@code false} otherwise.
      */
     protected boolean hasNegativeCycle() {
-        return crash(); //TODO: H3 d) - remove if implemented
+        //TODO: H3 d) - remove if implemented
+        for (Edge<N> edge : graph.getEdges()) {
+            // Check each edge to see if it can be relaxed further, indicating a negative cycle
+            if ((distances.get(edge.from()) != Integer.MAX_VALUE) &&
+                (distances.get(edge.from()) + edge.weight()) < distances.get(edge.to())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
