@@ -53,17 +53,56 @@ public class AdjacencyGraph<N> implements MutableGraph<N> {
     public AdjacencyGraph(Set<N> nodes, Set<Edge<N>> edges, AdjacencyRepresentation.Factory representationFactory) {
         representation = representationFactory.create(nodes.size());
 
-        crash(); //TODO: H1 c) - remove if implemented
+        //TODO: H1 c) - remove if implemented
+        for (N node : nodes) { // Add initial nodes (w/ a unique index on an interval)
+            nodeToIndex.put(node, nodeToIndex.size());
+            indexToNode.put(nodeToIndex.size()-1, node);
+        }
+        for (Edge<N> edge : edges) addEdge(edge); // Add initial edges
     }
 
+    /**
+     * Adds a new node to the graph.
+     *
+     * @param node the node to add
+     */
     @Override
     public void addNode(N node) {
-        crash(); //TODO: H1 c) - remove if implemented
+        //TODO: H1 c) - remove if implemented
+        if (!nodeToIndex.containsKey(node)) { // Check if the node already exists
+            // Assign a new index to the node
+            int newIndex = nodeToIndex.size();
+            nodeToIndex.put(node, newIndex);
+            indexToNode.put(newIndex, node);
+            // Grow the representation to accommodate the new node
+            if (representation.size() <= newIndex) representation.grow();
+        }
     }
 
+    /**
+     * Adds a new edge to the graph.
+     *
+     * @param edge the edge to add
+     */
     @Override
     public void addEdge(Edge<N> edge) {
-        crash(); //TODO: H1 c) - remove if implemented
+        //TODO: H1 c) - remove if implemented
+        N from = edge.from();
+        N to = edge.to();
+        // Ensure both nodes exist in the graph
+        if (!nodeToIndex.containsKey(to) || !nodeToIndex.containsKey(from)) throw new IllegalArgumentException();
+        // Add the edge to the representation
+        representation.addEdge(nodeToIndex.get(from), nodeToIndex.get(to));
+
+        // Store the weight of the edge
+        weights.computeIfAbsent(from, x -> new HashMap<>())
+            .put(to, edge.weight());
+
+        // ALTERNATIVELY:
+        // Check if 'from' node is in the map
+        if (!weights.containsKey(from)) weights.put(from, new HashMap<>()); // If not, add new empty map for 'from' node
+        weights.get(from)
+            .put(to, edge.weight()); // Now add the 'to' node and its edge weight to the inner map
     }
 
     @Override
@@ -82,9 +121,21 @@ public class AdjacencyGraph<N> implements MutableGraph<N> {
         return set;
     }
 
+    /**
+     * Gets all outgoing edges from the specified node.
+     *
+     * @param node the node
+     * @return a set of outgoing edges
+     */
     @Override
     public Set<Edge<N>> getOutgoingEdges(N node) {
-        return crash(); //TODO: H1 c) - remove if implemented
+        //TODO: H1 c) - remove if implemented
+        checkNode(node); // Check if node exists in the graph
+        Set<Edge<N>> outgoingEdges = new HashSet<>(); // Create a set to store the outgoing edges
+        // Get all adjacent nodes and creates edges
+        for (int toIndex : representation.getAdjacentIndices(nodeToIndex.get(node)))
+            outgoingEdges.add(Edge.of(node, indexToNode.get(toIndex), getWeight(node, indexToNode.get(toIndex))));
+        return outgoingEdges;
     }
 
     @Override
@@ -102,9 +153,21 @@ public class AdjacencyGraph<N> implements MutableGraph<N> {
         return set;
     }
 
+    /**
+     * Gets the edge between the specified nodes.
+     *
+     * @param from the starting node
+     * @param to the ending node
+     * @return the edge, or null if no edge exists
+     */
     @Override
     public Edge<N> getEdge(N from, N to) {
-        return crash(); //TODO: H1 c) - remove if implemented
+        //TODO: H1 c) - remove if implemented
+        checkNode(from); checkNode(to); // Check if both nodes exist in the graph
+        // Check if the edge exists in the representation
+        if (!representation.hasEdge(nodeToIndex.get(from), nodeToIndex.get(to))) return null;
+        // Returns the edge with its weight
+        return Edge.of(from, to, getWeight(from, to));
     }
 
     /**
