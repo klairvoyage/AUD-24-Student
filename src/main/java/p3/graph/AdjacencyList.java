@@ -2,6 +2,7 @@ package p3.graph;
 
 import p3.solver.MSTCalculator;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -43,19 +44,49 @@ public class AdjacencyList implements AdjacencyRepresentation {
         }
     }
 
+    /**
+     * Adds a directed edge from the 'from' vertex to the 'to' vertex.
+     *
+     * @param from the starting vertex
+     * @param to the ending vertex
+     * @throws IndexOutOfBoundsException if the vertex indices are out of bounds
+     */
     @Override
     public void addEdge(int from, int to) {
-        crash(); //TODO: H1 b) - remove if implemented
+        //TODO: H1 b) - remove if implemented
+        if (from < 0 || from >= adjacencyList.length || to < 0 || to >= adjacencyList.length)
+            throw new IndexOutOfBoundsException();
+        adjacencyList[from].add(to); // Add the edge to the adjacency list, if indices were valid
     }
 
+    /**
+     * Checks if there is a directed edge from the 'from' vertex to the 'to' vertex.
+     *
+     * @param from the starting vertex
+     * @param to the ending vertex
+     * @return true if there is an edge from 'from' to 'to', false otherwise
+     * @throws IndexOutOfBoundsException if the vertex indices are out of bounds
+     */
     @Override
     public boolean hasEdge(int from, int to) {
-        return crash(); //TODO: H1 b) - remove if implemented
+        //TODO: H1 b) - remove if implemented
+        if (from < 0 || from >= adjacencyList.length || to < 0 || to >= adjacencyList.length)
+            throw new IndexOutOfBoundsException();
+        return adjacencyList[from].contains(to); // Check if edge exists in the adjacency list, if indices were valid
     }
 
+    /**
+     * Returns a set of indices of all vertices adjacent to the given vertex.
+     *
+     * @param index the vertex whose adjacent vertices are to be found
+     * @return a set of indices of adjacent vertices
+     * @throws IndexOutOfBoundsException if the vertex index is out of bounds
+     */
     @Override
     public Set<Integer> getAdjacentIndices(int index) {
-        return crash(); //TODO: H1 b) - remove if implemented
+        //TODO: H1 b) - remove if implemented
+        if (index < 0 || index >= adjacencyList.length) throw new IndexOutOfBoundsException();
+        return new HashSet<>(adjacencyList[index]); // Return the set of adjacent vertices
     }
 
     @Override
