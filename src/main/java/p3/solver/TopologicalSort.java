@@ -4,6 +4,7 @@ import p3.graph.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.ObjIntConsumer;
 
 import static org.tudalgo.algoutils.student.Student.crash;
 
@@ -43,6 +44,13 @@ public class TopologicalSort<N> {
      * @throws CycleException if the graph contains a cycle.
      */
     public List<N> sort() {
-        return crash(); //TODO: H2 c) - remove if implemented
+        //TODO: H2 c) - remove if implemented
+        List<N> sortedNodes = new LinkedList<>(); // List to store the nodes in topologically sorted order
+        ObjIntConsumer<N> consumer = (node, finishTime) -> { // Add nodes to the sorted list upon completion
+            sortedNodes.add(0, node); // Add node to the front of the list to maintain topological order (DFS)
+        };
+        dfs.traverse(consumer); // Perform DFS traversal using the defined consumer
+        if (dfs.isCyclic()) throw new CycleException("The graph is cyclic.");
+        return sortedNodes; // Return the topologically sorted list of nodes
     }
 }
