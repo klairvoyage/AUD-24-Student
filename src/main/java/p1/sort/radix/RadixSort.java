@@ -68,7 +68,23 @@ public class RadixSort<T> implements Sort<T> {
 
     @Override
     public void sort(SortList<T> sortList) {
-        crash(); //TODO: H3  b) - remove if implemented
+        // Iterate through all positions from 0 to maxInputLength - 1
+        for (int i=0; i<maxInputLength; i++) {
+            // For each element in the sortList, place it into the appropriate bucket based on the current position
+            for (int j=0; j<sortList.getSize(); j++) putBucket(sortList.get(j), i);
+
+            // Reassemble the sortList from the buckets
+            int a = 0;
+            // Iterate through each bucket
+            for (int k=0; k<buckets.length; k++) {
+                int size = buckets[k].size();
+                // Remove all elements from the current bucket and place them back into the sortList (FIFO-principle!)
+                for (int b=0; b<size; b++) {
+                    sortList.set(a, buckets[k].remove());
+                    a++;
+                }
+            }
+        }
     }
 
     /**
@@ -81,7 +97,10 @@ public class RadixSort<T> implements Sort<T> {
      * @see RadixIndexExtractor#extractIndex(T, int)
      */
     public void putBucket(T value, int position) {
-        crash(); //TODO: H3  b) - remove if implemented
+        // Extract the index for the given value and position using the indexExtractor
+        int index = indexExtractor.extractIndex(value, position);
+        // Add the value to the corresponding bucket (FIFO-principle!)
+        buckets[index].add(value);
     }
 
     @Override
