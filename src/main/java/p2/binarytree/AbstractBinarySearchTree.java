@@ -94,7 +94,14 @@ public abstract class AbstractBinarySearchTree<T extends Comparable<T>, N extend
      *               the traversal stops.
      */
     protected void inOrder(N node, List<? super T> result, int max, Predicate<? super T> limit) {
-        crash(); //TODO: H3 a) - remove if implemented
+        //TODO: H3 a) - remove if implemented
+        if (node!=null && result.size()<max) { // Check null & maximum allowed elements
+            inOrder(node.getLeft(), result, max, limit); // Traverse the left subtree
+            // After traversing the left subtree, check the size of the result list and the predicate (limit check)
+            if (result.size()<max && limit.test(node.getKey())) result.add(node.getKey()); // add key to the result list
+            else return; // If the predicate returns false or the result list size reaches max, stop the traversal
+            inOrder(node.getRight(), result, max, limit); // Traverse the right subtree
+        }
     }
 
     /**
